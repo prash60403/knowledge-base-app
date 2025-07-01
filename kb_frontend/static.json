@@ -1,16 +1,7 @@
 {
   "routes": [
-    {
-      "src": "/PrashLogin",
-      "dest": "/"
-    },
-    {
-      "src": "/CustomerRegister",
-      "dest": "/"
-    },
-    {
-      "src": "/.*",
-      "dest": "/"
-    }
+    { "src": "/PrashLogin", "dest": "/" },
+    { "src": "/CustomerRegister", "dest": "/" },
+    { "src": "/.*", "dest": "/" }
   ]
 }
