@@ -1,30 +1,14 @@
-import { createApp } from 'vue';
+import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
-import axios from 'axios';
-import API from './services/api'; // Custom axios instance
+import API from './services/api';
 
-// ✅ Attach JWT to custom API instance if available
-const token = localStorage.getItem('accessToken');
-if (token) {
-  API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-}
+Vue.config.productionTip = false;
+Vue.prototype.$axios = API;
 
-// ✅ Global axios interceptor (if you use plain axios elsewhere)
-axios.interceptors.request.use(config => {
-  const token = localStorage.getItem('accessToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+new Vue({
+  router,
+  render: h => h(App)
+}).$mount('#app');
 
-const app = createApp(App);
-
-// ✅ Make axios and API globally available (optional but useful)
-app.config.globalProperties.$axios = axios;
-app.config.globalProperties.$api = API;
-
-app.use(router);
-app.mount('#app');
 
