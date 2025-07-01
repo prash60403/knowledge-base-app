@@ -3,16 +3,8 @@ import PrashLogin from '@/views/PrashLogin.vue';
 import CustomerRegister from '@/views/CustomerRegister.vue';
 
 const routes = [
-  {
-    path: '/',
-    name: 'Login',
-    component: PrashLogin
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: CustomerRegister
-  }
+  { path: '/PrashLogin', component: PrashLogin },
+  { path: '/CustomerRegister', component: CustomerRegister }
 ];
 
 const router = createRouter({

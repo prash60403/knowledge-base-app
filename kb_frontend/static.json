@@ -1,11 +1,11 @@
 {
   "routes": [
     {
-      "src": "/login",
+      "src": "/PrashLogin",
       "dest": "/"
     },
     {
-      "src": "/register",
+      "src": "/CustomerRegister",
       "dest": "/"
     },
     {
