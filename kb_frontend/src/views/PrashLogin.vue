@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import API from '@/services/api'  // ✅ imported
+
 export default {
   data() {
     return {
@@ -20,15 +22,20 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await this.$axios.post('http://localhost:8000/api/auth/login/', {
+        const response = await API.post('auth/login/', {
           email: this.email,
           password: this.password
-        })
-        localStorage.setItem('token', response.data.access)
-        alert('Login successful!')
-        this.$router.push('/')
+        });
+
+        const token = response.data.access;
+        localStorage.setItem('accessToken', token);
+        API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        alert('Login successful!');
+        this.$router.push('/dashboard'); // change if your route differs
       } catch (error) {
-        alert('Login failed')
+        alert('Login failed');
+        console.error(error);
       }
     }
   }

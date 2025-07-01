@@ -1,8 +1,8 @@
 <template>
   <div class="register-container">
     <h2>Register</h2>
-    <form @submit.prevent="register" class="register-form">
-      <input v-model="username" placeholder="Username" required />
+    <form @submit.prevent="handleRegister" class="register-form">
+      <input v-model="username" type="text" placeholder="Username" required />
       <input v-model="email" type="email" placeholder="Email" required />
       <input v-model="password" type="password" placeholder="Password" required />
       <button type="submit">Register</button>
@@ -11,30 +11,33 @@
 </template>
 
 <script>
+import API from '@/services/api';
+
 export default {
   data() {
     return {
       username: '',
       email: '',
       password: ''
-    }
+    };
   },
   methods: {
-    async register() {
+    async handleRegister() {
       try {
-        await this.$axios.post('http://localhost:8000/api/auth/register/', {
+        await API.post('auth/register/', {
           username: this.username,
           email: this.email,
           password: this.password
-        })
-        alert('Registration successful!')
-        this.$router.push('/')
-      } catch (error) {
-        alert('Registration failed')
+        });
+        alert('Registration successful. Please log in.');
+        this.$router.push('/');
+      } catch (err) {
+        alert('Registration failed. Try again.');
+        console.error(err.response?.data || err.message);
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
