@@ -1,17 +1,17 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-import App from '@/App.vue';  
+// src/router/index.js
+import { createRouter, createWebHistory } from 'vue-router';
 import PrashLogin from '@/views/PrashLogin.vue';
 import CustomerRegister from '@/views/CustomerRegister.vue';
 
-Vue.use(Router);
+const routes = [
+  { path: '/', redirect: '/login' }, // Redirect root to login
+  { path: '/login', component: PrashLogin },
+  { path: '/register', component: CustomerRegister }
+];
 
-export default new Router({
-  mode: 'history',
-  routes: [
-    { path: '/App.vue', component: App},
-    { path: '/PrashLogin', component: PrashLogin },
-    { path: '/CustomerRegister', component: CustomerRegister },
-    { path: '*', redirect: '/PrashLogin' } // fallback route
-  ]
+const router = createRouter({
+  history: createWebHistory(),
+  routes
 });
+
+export default router;

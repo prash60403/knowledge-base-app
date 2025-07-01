@@ -1,6 +1,16 @@
 <template>
   <div id="App">
-    <router-view />
+    <header>
+      <div class="brand">🧠 KnowledgeBaseApp</div>
+      <nav>
+        <router-link to="/PrashLogin">Login</router-link>
+        <router-link to="/CustomerRegister">Sign Up</router-link>
+      </nav>
+    </header>
+
+    <main>
+      <router-view />
+    </main>
   </div>
 </template>
 
@@ -15,22 +25,46 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body {
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-a {
+/* Header */
+header {
+  background-color: #fff;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* Navigation Links */
+nav a {
+  margin-left: 1rem;
   color: #42b983;
   text-decoration: none;
+  font-weight: 500;
 }
 
-a:hover {
+nav a:hover {
   text-decoration: underline;
+}
+
+/* Main Content */
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
 }
 </style>
