@@ -1,44 +1,33 @@
+# kb_backend/accounts/views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.core.mail import send_mail
-from django.conf import settings
+from django.contrib.auth.models import User
 
 class RegisterView(APIView):
     def post(self, request):
+        username = request.data.get('username')
         email = request.data.get('email')
         password = request.data.get('password')
-        if User.objects.filter(username=email).exists():
-            return Response({'message': 'User already exists'}, status=400)
-        User.objects.create_user(username=email, email=email, password=password)
-        return Response({'message': 'User registered successfully'}, status=201)
+
+        if User.objects.filter(email=email).exists():
+            return Response({"error": "User already exists"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.create_user(username=username, email=email, password=password)
+        return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
 
 class LoginView(APIView):
     def post(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
-        user = authenticate(username=email, password=password)
-        if user:
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                'token': str(refresh.access_token)
-            })
-        return Response({'message': 'Invalid credentials'}, status=401)
 
-class PasswordResetRequest(APIView):
-    def post(self, request):
-        email = request.data.get('email')
-        if not User.objects.filter(email=email).exists():
-            return Response({'message': 'Email not found'}, status=404)
+        try:
+            user = User.objects.get(email=email)
+            user = authenticate(username=user.username, password=password)
+            if user:
+                return Response({"message": "Login successful"}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            pass
 
-        # NOTE: You should send a secure token + reset link in real systems
-        send_mail(
-            subject="Reset Your Password",
-            message="Here is your reset link: (not implemented yet)",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email]
-        )
-        return Response({'message': 'Reset link sent'}, status=200)
+        return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
