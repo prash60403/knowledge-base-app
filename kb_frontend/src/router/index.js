@@ -1,17 +1,17 @@
-// src/router/index.js
-import { createRouter, createWebHistory } from 'vue-router';
-import PrashLogin from '@/views/PrashLogin.vue';
-import CustomerRegister from '@/views/CustomerRegister.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from '@/components/Home.vue'
+import PrashLogin from '@/views/PrashLogin.vue'
+import CustomerRegister from '@/views/CustomerRegister.vue'
 
 const routes = [
-  { path: '/', redirect: '/login' }, // Redirect root to login
+  { path: '/', component: Home },
   { path: '/login', component: PrashLogin },
-  { path: '/register', component: CustomerRegister }
-];
+  { path: '/register', component: CustomerRegister },
+]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
-});
+  routes,
+})
 
-export default router;
+export default router
