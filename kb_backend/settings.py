@@ -13,7 +13,15 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from decouple import config
 import os
-ALLOWED_HOSTS = [os.getenv('RENDER_EXTERNAL_HOSTNAME', 'localhost')]
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    os.getenv('RENDER_EXTERNAL_HOSTNAME', ''),
+    'django-test-xu9p.onrender.com',
+    'kb_backend.onrender.com',
+    'knowledge-base-app.onrender.com',  # Optional: if needed for reverse proxy
+]
+
 
 
 SECRET_KEY = config('SECRET_KEY')
@@ -33,13 +41,6 @@ SECRET_KEY = 'django-insecure-@69f&5yy#x@+c8ge=pfkf-2h-at6%d56(l8-fftsikw-ol)%hz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    os.getenv('RENDER_EXTERNAL_HOSTNAME', ''),
-    'django-test-xu9p.onrender.com'
-]
-
 
 
 # Application definition
@@ -58,6 +59,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # 🔥 Must be first
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -65,9 +67,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
-CORS_ALLOW_ALL_ORIGINS = True
+
 ROOT_URLCONF = 'kb_backend.urls'
 
 TEMPLATES = [
@@ -148,6 +149,7 @@ CORS_ALLOWED_ORIGINS = [
 
 # Optional for safer config:
 CORS_ALLOW_CREDENTIALS = True
+
 
 
 # Static files (CSS, JavaScript, Images)
