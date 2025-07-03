@@ -132,7 +132,7 @@ USE_TZ = True
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
-    "https://knowledge-frontend-tqvu.onrender.com",  # Your frontend URL
+    'https://knowledge-frontend-tqvu.onrender.com',
 ]
 
 # Optional for safer config:
@@ -152,9 +152,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ✅ Email Configuration for Password Reset
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'prashanthhv2003@gmail.com'           # 👉 Replace with your Gmail
-EMAIL_HOST_PASSWORD = 'Prashu@60403'          # 👉 Use Gmail App Password
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = config('EMAIL_PORT', cast=int, default=587)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool, default=True)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='your-email@gmail.com')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='your-app-password')
