@@ -14,7 +14,7 @@ from pathlib import Path
 from decouple import config
 import os
 ALLOWED_HOSTS = [
-    'kb-backend-name.onrender.com',
+    'kb-backend-bdx0.onrender.com',
     'localhost',
     '127.0.0.1'
 ]
