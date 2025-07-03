@@ -14,11 +14,9 @@ from pathlib import Path
 from decouple import config
 import os
 ALLOWED_HOSTS = [
+    'your-backend-name.onrender.com',
     'localhost',
-    '127.0.0.1',
-    os.getenv('RENDER_EXTERNAL_HOSTNAME', ''),
-    'django-test-xu9p.onrender.com',
-    'knowledge-base-app.onrender.com',  # Optional: if needed for reverse proxy
+    '127.0.0.1'
 ]
 
 
@@ -103,12 +101,6 @@ DATABASES = {
     }
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'your-email@gmail.com'
-EMAIL_HOST_PASSWORD = 'your-app-password'
 
 
 # Password validation
@@ -143,7 +135,7 @@ USE_TZ = True
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
-    "https://knowledge-base-app.onrender.com",  # Your frontend URL
+    "https://knowledge-frontend-tqvu.onrender.com",  # Your frontend URL
 ]
 
 # Optional for safer config:
