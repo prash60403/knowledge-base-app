@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "@babel/core": "^7.27.7",
+    "@vue/cli-plugin-babel": "^5.0.8"
+  }
+}
