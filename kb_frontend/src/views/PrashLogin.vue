@@ -1,18 +1,40 @@
 <template>
   <div class="login-container">
-    <h2>Login</h2>
-    <form @submit.prevent="login">
-      <input v-model="email" type="email" placeholder="Email" required />
-      <input v-model="password" type="password" placeholder="Password" required />
-      <button type="submit">Login</button>
+    <h2 v-if="!registerMode && !forgot">Login</h2>
+    <h2 v-if="registerMode">Register</h2>
+    <h2 v-if="forgot">Reset Password</h2>
+
+    <form @submit.prevent="registerMode ? register() : forgot ? sendResetEmail() : login()">
+      <input
+        v-model="email"
+        type="email"
+        placeholder="Email"
+        required
+      />
+      <input
+        v-if="!forgot"
+        v-model="password"
+        type="password"
+        placeholder="Password"
+        required
+      />
+      <button type="submit">
+        {{ registerMode ? 'Register' : forgot ? 'Send Reset Email' : 'Login' }}
+      </button>
     </form>
 
-    <p class="forgot-link" @click="forgot = true">Forgot Password?</p>
-
-    <div v-if="forgot" class="reset-box">
-      <h4>Reset Password</h4>
-      <input v-model="resetEmail" type="email" placeholder="Enter your email" />
-      <button @click="sendResetEmail">Send Reset Link</button>
+    <div class="options">
+      <p v-if="!forgot">
+        <a href="#" @click.prevent="registerMode = !registerMode; forgot = false">
+          {{ registerMode ? 'Already have an account? Login' : "Don't have an account? Register" }}
+        </a>
+      </p>
+      <p v-if="!registerMode">
+        <a href="#" @click.prevent="forgot = !forgot">Forgot password?</a>
+      </p>
+      <p v-if="forgot">
+        <a href="#" @click.prevent="forgot = false">Back to Login</a>
+      </p>
     </div>
   </div>
 </template>
@@ -24,31 +46,56 @@ export default {
       email: '',
       password: '',
       forgot: false,
-      resetEmail: ''
+      resetEmail: '',
+      registerMode: false,
     }
   },
   methods: {
     async login() {
-      const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/login/', {
+      const res = await fetch(import.meta.env.VITE_API_BASE_URL + 'login/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: this.email, password: this.password })
+        body: JSON.stringify({
+          username: this.email,
+          password: this.password,
+        }),
       })
       const data = await res.json()
       if (res.ok) {
         alert('Login successful')
         localStorage.setItem('token', data.token)
-        // Redirect to dashboard or homepage
+        this.$router.push('/dashboard') // update this if needed
       } else {
         alert(data.message || 'Login failed')
       }
     },
-    async sendResetEmail() {
-      
-      const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/password-reset/', {
+
+    async register() {
+      const res = await fetch(import.meta.env.VITE_API_BASE_URL + 'register/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: this.resetEmail })
+        body: JSON.stringify({
+          username: this.email,
+          password: this.password,
+        }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        alert('Registration successful! Logging you in...')
+        await this.login() // auto-login
+        this.registerMode = false
+      } else {
+        alert(data.message || 'Registration failed')
+      }
+    },
+
+    async sendResetEmail() {
+      const res = await fetch(import.meta.env.VITE_API_BASE_URL + 'password-reset/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: this.email, // using login email field
+        }),
       })
       if (res.ok) {
         alert('Password reset email sent!')
@@ -56,78 +103,42 @@ export default {
       } else {
         alert('Error sending reset email')
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style scoped>
 .login-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background: linear-gradient(to right, #e0f7fa, #b2ebf2);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-h2 {
-  color: #006064;
-  margin-bottom: 20px;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 280px;
-}
-
-input {
-  padding: 10px;
-  font-size: 1rem;
-  border: 1px solid #b2dfdb;
-  border-radius: 8px;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-input:focus {
-  border-color: #00796b;
-}
-
-button {
-  padding: 10px;
-  background-color: #00796b;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #004d40;
-}
-
-.forgot-link {
-  margin-top: 10px;
-  color: #007acc;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.reset-box {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 280px;
-  background: #ffffffaa;
-  padding: 15px;
+  max-width: 400px;
+  margin: auto;
+  padding: 2rem;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+input {
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.8rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+button {
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 1rem;
+  background-color: #2e86de;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+.options {
+  margin-top: 1rem;
+  text-align: center;
+}
+a {
+  color: #2e86de;
+  text-decoration: none;
+  font-size: 0.9rem;
 }
 </style>
