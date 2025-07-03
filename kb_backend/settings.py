@@ -18,7 +18,6 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     os.getenv('RENDER_EXTERNAL_HOSTNAME', ''),
     'django-test-xu9p.onrender.com',
-    'kb_backend.onrender.com',
     'knowledge-base-app.onrender.com',  # Optional: if needed for reverse proxy
 ]
 
