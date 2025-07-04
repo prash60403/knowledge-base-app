@@ -90,7 +90,7 @@ export default {
     },
 
     async sendResetEmail() {
-      const res = await axios.post('https://kb-backend-bdx0.onrender.com/api/password-reset//', {
+      const res = await axios.post('https://kb-backend-bdx0.onrender.com/api/password-reset/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

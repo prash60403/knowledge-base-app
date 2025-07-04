@@ -8,7 +8,7 @@ const routes = [
   { path: '/', component: Home },
   { path: '/login', component: PrashLogin },
   { path: '/register', component: CustomerRegister },
-  { path: '/reset-password', component: ResetPassword },
+  { path: '/reset-password', component: ResetPassword }
 ]
 
 const router = createRouter({
