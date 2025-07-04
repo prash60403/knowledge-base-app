@@ -1,8 +1,7 @@
-# kb_backend/urls.py
 from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('accounts.urls')),  # 👈 Include this line
+    path('api/', include('accounts.urls')),  # <== this line is important
 ]
