@@ -30,7 +30,7 @@ export default {
   methods: {
     async register() {
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + 'register/', {
+        const res =  await axios.post('https://kb-backend-bdx0.onrender.com/api/register/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

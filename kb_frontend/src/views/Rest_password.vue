@@ -23,7 +23,7 @@ export default {
   methods: {
     async sendResetEmail() {
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + 'password-reset/', {
+        const res = await axios.post('https://kb-backend-bdx0.onrender.com/api/password-reset/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: this.email }),

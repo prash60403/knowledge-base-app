@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     async login() {
-      const res = await fetch(import.meta.env.VITE_API_BASE_URL + 'login/', {
+      const res = await axios.post('https://kb-backend-bdx0.onrender.com/api/login/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -71,7 +71,7 @@ export default {
     },
 
     async register() {
-      const res = await fetch(import.meta.env.VITE_API_BASE_URL + 'register/', {
+      const res = await axios.post('https://kb-backend-bdx0.onrender.com/api/register/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -90,7 +90,7 @@ export default {
     },
 
     async sendResetEmail() {
-      const res = await fetch(import.meta.env.VITE_API_BASE_URL + 'password-reset/', {
+      const res = await axios.post('https://kb-backend-bdx0.onrender.com/api/password-reset//', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
