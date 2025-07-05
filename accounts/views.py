@@ -1,49 +1,40 @@
-from rest_framework import generics, status
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.contrib.auth import authenticate, get_user_model
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import status
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from .serializers import RegisterSerializer, LoginSerializer, PasswordResetSerializer
 
-User = get_user_model()
-
-
-class RegisterView(generics.CreateAPIView):
-    serializer_class = RegisterSerializer
-
-
-class LoginView(generics.GenericAPIView):
-    serializer_class = LoginSerializer
-
+class RegisterView(APIView):
     def post(self, request):
-        email = request.data.get('email')
-        password = request.data.get('password')
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            return Response({'detail': 'Invalid email or password'}, status=status.HTTP_400_BAD_REQUEST)
-
-        user = authenticate(username=user.username, password=password)
-        if user is not None:
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-            })
-        else:
-            return Response({'detail': 'Invalid email or password'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-class PasswordResetRequest(generics.GenericAPIView):
-    serializer_class = PasswordResetSerializer
-
+class LoginView(APIView):
     def post(self, request):
-        email = request.data.get('email')
-        if not email:
-            return Response({'detail': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            password = serializer.validated_data['password']
+            try:
+                user = User.objects.get(email=email)
+                user = authenticate(email=user.email, password=password)
+                if user:
+                    return Response({"message": "Login successful"}, status=status.HTTP_200_OK)
+                return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+            except User.DoesNotExist:
+                return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        if User.objects.filter(email=email).exists():
-            # Placeholder for sending email logic
-            return Response({'detail': 'Password reset email sent (simulated).'})
-        else:
-            return Response({'detail': 'User with this email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+class PasswordResetRequest(APIView):
+    def post(self, request):
+        serializer = PasswordResetSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            if User.objects.filter(email=email).exists():
+                return Response({"message": "Reset link sent"}, status=status.HTTP_200_OK)
+            return Response({"error": "Email not found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
